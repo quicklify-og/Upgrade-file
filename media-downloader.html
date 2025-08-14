@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Media Downloader – Quicklify</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #d0fefb);
+      color: #1a1a1a;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 42px;
+      background: linear-gradient(90deg, #00bcd4, #4caf50);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    p.intro, .about-text p {
+      text-align: center;
+      font-size: 17px;
+      max-width: 760px;
+      margin: 10px auto;
+      line-height: 1.6;
+    }
+
+    .box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 550px;
+      margin: 30px auto;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    input[type="text"], select {
+      padding: 12px;
+      font-size: 16px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      font-size: 16px;
+      background: linear-gradient(135deg, #00bcd4, #4caf50);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
+      margin-top: 15px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .how-to {
+      background: linear-gradient(135deg, #f0fff0, #e6ffe6);
+      border-radius: 20px;
+      padding: 25px;
+      margin-top: 50px;
+      text-align: center;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.07);
+    }
+
+    .how-to h3 {
+      font-size: 24px;
+      background: linear-gradient(90deg, #2e7d32, #00796b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .how-to p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    .info-paragraphs {
+      max-width: 850px;
+      margin: 60px auto 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cloud-box {
+      background: linear-gradient(135deg, #ffffff, #f1f8e9);
+      padding: 22px;
+      border-radius: 22px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .buttons-bottom {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .btn-secondary {
+    	 text-align: center;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #aed581, #81c784);
+      color: #000;
+      font-weight: bold;
+      font-size: 15px;
+      margin: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      background: linear-gradient(90deg, #00796b, #2e7d32);
+      color: white;
+      text-align: center;
+      font-size: 14px;
+      padding: 20px 10px;
+      margin-top: 60px;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Media Downloader</h1>
+  <p class="intro">Paste any link from YouTube, Instagram, Twitter, or others – and download your content in high quality, your way!</p>
+  <p class="intro">Choose between full videos (MP4), audio only (MP3), or high-res images. Quick, smooth, and all browser-based!</p>
+
+  <form class="box" method="POST" action="download.php" onsubmit="return validateForm();">
+    <input type="text" name="url" id="mediaLink" placeholder="Paste your video or image link here..." />
+
+    <select id="typeSelect">
+      <option value="video">🎥 Download Video (MP4)</option>
+      <option value="audio">🎵 Download Audio (MP3)</option>
+      <option value="image">🖼️ Download Image</option>
+    </select>
+
+    <select id="resolutionSelect">
+      <option value="144">144p</option>
+      <option value="360">360p</option>
+      <option value="720">720p</option>
+      <option value="1080">1080p</option>
+      <option value="1440">2K</option>
+      <option value="2160">4K</option>
+    </select>
+
+    <button type="submit" class="btn">Download</button>   
+  </form>
+  <button class="btn-secondary" onclick="location.reload()">⟳ Refresh</button>
+
+  <div class="how-to">
+    <h3>🧠 How to Use</h3>
+    <p>1️⃣ Paste the media link into the input box above.</p>
+    <p>2️⃣ Choose the content type you want: Video, Audio, or Image.</p>
+    <p>3️⃣ Select your desired resolution (up to 4K).</p>
+    <p>4️⃣ Click "Download" to proceed.</p>
+  </div>
+
+  <div class="info-paragraphs">
+    <div class="cloud-box">📺 High-quality streaming support ensures your downloads are crisp and clear — even up to 4K.</div>
+    <div class="cloud-box">🎶 Prefer just the music? Download audio-only (MP3) version instantly — perfect for playlists.</div>
+    <div class="cloud-box">📸 Download beautiful high-resolution images in one click — great for wallpapers and designs.</div>
+    <div class="cloud-box">🌐 Compatible with top platforms like YouTube, Twitter, Instagram, Facebook & more.</div>
+    <div class="cloud-box">⚡ All tools run in your browser. No app install, no account, no watermark!</div>
+  </div>
+
+  <div class="buttons-bottom">
+    <button class="btn-secondary" onclick="location.href='Quicklify.html'">← Back to Home</button>
+   
+  </div>
+
+  <footer>
+    © 2025 <strong>Quicklify</strong>. Fast media tools for your creative needs.
+  </footer>
+
+  <script>
+    function validateForm() {
+      const link = document.getElementById("mediaLink").value.trim();
+      if (!link) {
+        alert("Please paste a valid media link.");
+        return false;
+      }
+      return true;
+    }
+    function location.reload() {
+      inputBox.value = "";
+      outputBox.value = "";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Title Generator – Quicklify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(to bottom, #fef3ff, #e4faff);
+      color: #222;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 34px;
+      background: linear-gradient(90deg, #ff4d4d, #4d79ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 17px;
+      max-width: 750px;
+      margin: 0 auto 25px;
+      color: #444;
+    }
+
+    .tool-box {
+      background: #ffffff;
+      padding: 30px;
+      max-width: 640px;
+      margin: 0 auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 12px 28px;
+      margin: 20px 10px 0;
+      background: linear-gradient(135deg, #4d79ff, #ff4d4d);
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .result-box {
+      margin-top: 30px;
+      background: #f7faff;
+      padding: 20px;
+      border-radius: 16px;
+      display: none;
+    }
+
+    .result-box p {
+      font-size: 16px;
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .how-to {
+      background: #f0f9ff;
+      margin: 50px auto 30px;
+      padding: 25px;
+      max-width: 700px;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .how-to h3 {
+      font-size: 22px;
+      background: linear-gradient(90deg, #4d79ff, #ff4d4d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .how-to ol {
+      padding-left: 20px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .info-boxes {
+      max-width: 900px;
+      margin: 40px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-box {
+      background: #fff;
+      padding: 18px 20px;
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .footer-buttons {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .footer-buttons button {
+      margin: 10px;
+      background: linear-gradient(135deg, #00b894, #00cec9);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+      margin-top: 30px;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎬 YouTube Title & Description Generator</h1>
+  <p class="intro">
+    Instantly generate click-worthy YouTube titles, descriptions, and hashtags — optimized by AI to boost reach & SEO.
+  </p>
+
+  <div class="tool-box">
+    <input type="text" id="topic" placeholder="Enter your video topic (e.g. iPhone 16 leaks)" />
+    <div style="text-align:center;">
+      <button onclick="generate()">Generate</button>
+      <button onclick="location.reload()">Refresh</button>
+    </div>
+
+    <div class="result-box" id="result">
+      <p><strong>🎬 Title:</strong> <span id="title"></span></p>
+      <p><strong>📄 Description:</strong> <span id="description"></span></p>
+      <p><strong>🔖 Hashtags:</strong> <span id="hashtags"></span></p>
+    </div>
+  </div>
+
+  <div class="how-to">
+    <h3>🛠️ How to Use</h3>
+    <ol>
+      <li>Enter your YouTube video topic in the box above.</li>
+      <li>Click <strong>“Generate”</strong> to get a title, description & hashtags.</li>
+      <li>Click <strong>Refresh</strong> to reset the form and try again.</li>
+      <li>Copy and use the content while uploading your video.</li>
+    </ol>
+  </div>
+
+  <div class="info-boxes">
+    <div class="info-box">
+      📢 <strong>Why it matters:</strong> A catchy title and smart hashtags boost your video’s reach and SEO. This tool helps you stay ahead with optimized suggestions.
+    </div>
+    <div class="info-box">
+      🤖 <strong>Powered by AI:</strong> Backed by OpenAI, this tool understands context and current trends to generate meaningful, high-performing content.
+    </div>
+  </div>
+
+  <div class="footer-buttons">
+    <button onclick="window.location.href='Quicklify.html'">← Back to Home</button>
+  </div>
+
+  <footer>
+    © 2025 <strong>Quicklify</strong>. Built to simplify your digital journey.
+  </footer>
+
+  <script>
+    async function generate() {
+      const topic = document.getElementById("topic").value.trim();
+      if (!topic) return alert("Please enter a topic.");
+
+      const res = await fetch("generate.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ topic })
+      });
+
+      const data = await res.json();
+
+      if (data.error || !data.choices) {
+        alert("❌ Failed to generate. Check your API key or quota.");
+        return;
+      }
+
+      const text = data.choices[0].text;
+      const lines = text.split("\n").filter(line => line.trim());
+
+      document.getElementById("title").innerText =
+        lines.find(l => l.toLowerCase().includes("title"))?.split(":")[1]?.trim() || "Not found";
+      document.getElementById("description").innerText =
+        lines.find(l => l.toLowerCase().includes("description"))?.split(":")[1]?.trim() || "Not found";
+      document.getElementById("hashtags").innerText =
+        lines.find(l => l.toLowerCase().includes("hashtag"))?.split(":")[1]?.trim() || "Not found";
+
+      document.getElementById("result").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
