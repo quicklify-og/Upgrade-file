@@ -1,215 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Media Downloader – Quicklify</title>
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #d0fefb);
-      color: #1a1a1a;
-      padding: 40px 20px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-top: 40px;
     }
 
     h1 {
-      text-align: center;
-      font-size: 42px;
-      background: linear-gradient(90deg, #00bcd4, #4caf50);
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #fff, #f8f9fa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    p.intro, .about-text p {
-      text-align: center;
-      font-size: 17px;
-      max-width: 760px;
-      margin: 10px auto;
-      line-height: 1.6;
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 300;
     }
 
-    .box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      max-width: 550px;
-      margin: 30px auto;
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-      text-align: center;
+    .main-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    input[type="text"], select {
-      padding: 12px;
-      font-size: 16px;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      margin-bottom: 15px;
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
       display: block;
-      margin-left: auto;
-      margin-right: auto;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #374151;
+      font-size: 0.95rem;
     }
 
-    .btn {
-      padding: 12px 28px;
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
       font-size: 16px;
-      background: linear-gradient(135deg, #00bcd4, #4caf50);
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 14px;
-      margin-top: 15px;
-      cursor: pointer;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
+      background: #fff;
     }
 
-    .btn:hover {
-      transform: scale(1.05);
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
-    .how-to {
-      background: linear-gradient(135deg, #f0fff0, #e6ffe6);
-      border-radius: 20px;
-      padding: 25px;
-      margin-top: 50px;
-      text-align: center;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.07);
-    }
-
-    .how-to h3 {
-      font-size: 24px;
-      background: linear-gradient(90deg, #2e7d32, #00796b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 15px;
-    }
-
-    .how-to p {
-      font-size: 16px;
-      line-height: 1.6;
-      margin: 10px 0;
-    }
-
-    .info-paragraphs {
-      max-width: 850px;
-      margin: 60px auto 30px;
-      display: flex;
-      flex-direction: column;
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
 
-    .cloud-box {
-      background: linear-gradient(135deg, #ffffff, #f1f8e9);
-      padding: 22px;
-      border-radius: 22px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      font-size: 15px;
-      text-align: center;
+    .download-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 20px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .buttons-bottom {
-      text-align: center;
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .download-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .result-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .download-link {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .download-link:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .error-message {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #dc2626;
+      display: none;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
       margin-top: 40px;
     }
 
-    .btn-secondary {
-    	 text-align: center;
-      padding: 10px 24px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #aed581, #81c784);
-      color: #000;
-      font-weight: bold;
-      font-size: 15px;
-      margin: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    .info-card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 24px;
+      border-radius: 16px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    footer {
-      background: linear-gradient(90deg, #00796b, #2e7d32);
-      color: white;
+    .info-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .info-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    .info-card p {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .supported-platforms {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
       text-align: center;
-      font-size: 14px;
-      padding: 20px 10px;
-      margin-top: 60px;
-      position: relative;
+    }
+
+    .platform-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .platform-tag {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .media-info {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      border-left: 4px solid #667eea;
+    }
+
+    .media-info h3 {
+      color: #374151;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .info-details {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .info-details span {
+      padding: 4px 12px;
+      background: #e5e7eb;
+      border-radius: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .main-card {
+        padding: 24px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
+  <div class="container">
+    <div class="header">
+      <h1>🎬 Media Downloader</h1>
+      <p class="subtitle">Download videos, audio, and images from YouTube, Instagram, Twitter, TikTok, and 500+ other
+        platforms in high quality!</p>
+    </div>
 
-  <h1>Media Downloader</h1>
-  <p class="intro">Paste any link from YouTube, Instagram, Twitter, or others – and download your content in high quality, your way!</p>
-  <p class="intro">Choose between full videos (MP4), audio only (MP3), or high-res images. Quick, smooth, and all browser-based!</p>
+    <div class="main-card">
+      <!-- Step 1: URL Input -->
+      <div id="step1">
+        <div class="form-group">
+          <label for="mediaUrl">📎 Media URL</label>
+          <input type="text" id="mediaUrl" placeholder="Paste your video, audio, or image link here..." required>
+        </div>
+        <button type="button" class="download-btn" id="analyzeBtn">
+          <span class="spinner" id="analyzeSpinner"></span>
+          <span id="analyzeBtnText">🔍 Analyze Media</span>
+        </button>
+      </div>
 
-  <form class="box" method="POST" action="download.php" onsubmit="return validateForm();">
-    <input type="text" name="url" id="mediaLink" placeholder="Paste your video or image link here..." />
+      <!-- Step 2: Media Info & Download Options -->
+      <div id="step2" style="display: none;">
+        <div class="media-info" id="mediaInfo">
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <img id="mediaThumbnail" src="" alt="Video thumbnail" style="width: 80px; height: 60px; border-radius: 8px; object-fit: cover; display: none;">
+            <div>
+              <h3 id="mediaTitle">📺 Loading...</h3>
+              <div class="info-details">
+                <span id="mediaDuration"></span>
+                <span id="mediaPlatform"></span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <select id="typeSelect">
-      <option value="video">🎥 Download Video (MP4)</option>
-      <option value="audio">🎵 Download Audio (MP3)</option>
-      <option value="image">🖼️ Download Image</option>
-    </select>
+        <form id="downloadForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="mediaType">🎯 Content Type</label>
+              <select id="mediaType">
+                <option value="video">🎥 Video (MP4)</option>
+                <option value="audio">🎵 Audio Only (MP3)</option>
+                <option value="best">⭐ Best Quality</option>
+              </select>
+            </div>
 
-    <select id="resolutionSelect">
-      <option value="144">144p</option>
-      <option value="360">360p</option>
-      <option value="720">720p</option>
-      <option value="1080">1080p</option>
-      <option value="1440">2K</option>
-      <option value="2160">4K</option>
-    </select>
+            <div class="form-group">
+              <label for="quality">📺 Quality</label>
+              <select id="quality">
+                <option value="144">144p - Small file</option>
+                <option value="360">360p - Good for mobile</option>
+                <option value="480">480p - Standard</option>
+                <option value="720">720p - HD</option>
+                <option value="1080">1080p - Full HD</option>
+                <option value="1440">1440p - 2K</option>
+                <option value="2160">2160p - 4K</option>
+                <option value="best">Best Available</option>
+              </select>
+            </div>
+          </div>
 
-    <button type="submit" class="btn">Download</button>   
-  </form>
-  <button class="btn-secondary" onclick="location.reload()">⟳ Refresh</button>
+          <button type="submit" class="download-btn" id="downloadBtn">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">⚡ Download Now</span>
+          </button>
+        </form>
 
-  <div class="how-to">
-    <h3>🧠 How to Use</h3>
-    <p>1️⃣ Paste the media link into the input box above.</p>
-    <p>2️⃣ Choose the content type you want: Video, Audio, or Image.</p>
-    <p>3️⃣ Select your desired resolution (up to 4K).</p>
-    <p>4️⃣ Click "Download" to proceed.</p>
+        <button type="button" class="back-btn" id="backBtn" style="margin-top: 15px; background: #6c757d;">
+          ← Try Another URL
+        </button>
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="result-section" id="resultSection">
+        <h3>✅ Download Ready!</h3>
+        <p id="resultText"></p>
+        <a href="#" id="downloadLink" class="download-link" download>📥 Download File</a>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="icon">⚡</span>
+        <h3>Lightning Fast</h3>
+        <p>High-speed downloads with optimized servers for quick processing</p>
+      </div>
+      <div class="info-card">
+        <span class="icon">🔒</span>
+        <h3>100% Secure</h3>
+        <p>No data stored, completely private downloads processed in real-time</p>
+      </div>
+      <div class="info-card">
+        <span class="icon">🎯</span>
+        <h3>Multi-Platform</h3>
+        <p>Works with 500+ websites including all major social platforms</p>
+      </div>
+      <div class="info-card">
+        <span class="icon">🎨</span>
+        <h3>High Quality</h3>
+        <p>Download in up to 4K resolution with crystal clear audio</p>
+      </div>
+    </div>
+
+    <div class="supported-platforms">
+      <h3>🌐 Supported Platforms</h3>
+      <div class="platform-tags">
+        <span class="platform-tag">YouTube</span>
+        <span class="platform-tag">Instagram</span>
+        <span class="platform-tag">Twitter</span>
+        <span class="platform-tag">TikTok</span>
+        <span class="platform-tag">Facebook</span>
+        <span class="platform-tag">Vimeo</span>
+        <span class="platform-tag">Dailymotion</span>
+        <span class="platform-tag">SoundCloud</span>
+        <span class="platform-tag">Reddit</span>
+        <span class="platform-tag">500+ More</span>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="Quicklify.html" class="back-btn">← Back to Home</a>
+    </div>
   </div>
-
-  <div class="info-paragraphs">
-    <div class="cloud-box">📺 High-quality streaming support ensures your downloads are crisp and clear — even up to 4K.</div>
-    <div class="cloud-box">🎶 Prefer just the music? Download audio-only (MP3) version instantly — perfect for playlists.</div>
-    <div class="cloud-box">📸 Download beautiful high-resolution images in one click — great for wallpapers and designs.</div>
-    <div class="cloud-box">🌐 Compatible with top platforms like YouTube, Twitter, Instagram, Facebook & more.</div>
-    <div class="cloud-box">⚡ All tools run in your browser. No app install, no account, no watermark!</div>
-  </div>
-
-  <div class="buttons-bottom">
-    <button class="btn-secondary" onclick="location.href='Quicklify.html'">← Back to Home</button>
-   
-  </div>
-
-  <footer>
-    © 2025 <strong>Quicklify</strong>. Fast media tools for your creative needs.
-  </footer>
 
   <script>
-    function validateForm() {
-      const link = document.getElementById("mediaLink").value.trim();
-      if (!link) {
-        alert("Please paste a valid media link.");
-        return false;
+    // Step 1: Analyze media
+    document.getElementById('analyzeBtn').addEventListener('click', async function() {
+      const url = document.getElementById('mediaUrl').value.trim();
+      
+      if (!url) {
+        showError('Please enter a valid URL');
+        return;
       }
-      return true;
+
+      // Show loading
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      const analyzeSpinner = document.getElementById('analyzeSpinner');
+      const analyzeBtnText = document.getElementById('analyzeBtnText');
+
+      analyzeBtn.disabled = true;
+      analyzeSpinner.style.display = 'inline-block';
+      analyzeBtnText.textContent = 'Analyzing...';
+
+      hideError();
+      hideResult();
+
+      try {
+        const response = await fetch('/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url: url })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Show media info
+          document.getElementById('mediaTitle').textContent = data.title || 'Media Found';
+          
+          // Show thumbnail if available
+          const thumbnail = document.getElementById('mediaThumbnail');
+          if (data.thumbnail) {
+            thumbnail.src = data.thumbnail;
+            thumbnail.style.display = 'block';
+          } else {
+            thumbnail.style.display = 'none';
+          }
+          
+          let details = [];
+          if (data.duration) {
+            const minutes = Math.floor(data.duration / 60);
+            const seconds = data.duration % 60;
+            details.push(`⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}`);
+          }
+          if (data.platform) {
+            details.push(`🌐 ${data.platform}`);
+          }
+          
+          document.querySelector('.info-details').innerHTML = details.map(d => `<span>${d}</span>`).join('');
+          
+          // Update quality options
+          const qualitySelect = document.getElementById('quality');
+          qualitySelect.innerHTML = '<option value="best">Best Available</option>';
+          
+          if (data.video_qualities && data.video_qualities.length > 0) {
+            data.video_qualities.forEach(q => {
+              const option = document.createElement('option');
+              option.value = q;
+              let label = `${q}p`;
+              
+              // Add quality descriptions
+              if (q >= 2160) label += ' - 4K Ultra HD';
+              else if (q >= 1440) label += ' - 2K QHD';
+              else if (q >= 1080) label += ' - Full HD';
+              else if (q >= 720) label += ' - HD';
+              else if (q >= 480) label += ' - Standard';
+              else if (q >= 360) label += ' - Mobile';
+              else label += ' - Low';
+              
+              option.textContent = label;
+              qualitySelect.appendChild(option);
+            });
+          } else {
+            // Fallback standard options
+            const standardQualities = [
+              {value: '2160', text: '2160p - 4K Ultra HD'},
+              {value: '1440', text: '1440p - 2K QHD'},
+              {value: '1080', text: '1080p - Full HD'},
+              {value: '720', text: '720p - HD'},
+              {value: '480', text: '480p - Standard'},
+              {value: '360', text: '360p - Mobile'},
+              {value: '240', text: '240p - Low'},
+              {value: '144', text: '144p - Very Low'}
+            ];
+            
+            standardQualities.forEach(q => {
+              const option = document.createElement('option');
+              option.value = q.value;
+              option.textContent = q.text;
+              qualitySelect.appendChild(option);
+            });
+          }
+
+          // Show step 2
+          document.getElementById('step1').style.display = 'none';
+          document.getElementById('step2').style.display = 'block';
+        } else {
+          showError(data.error || 'Could not analyze media. Please check the URL.');
+        }
+      } catch (error) {
+        showError('Network error. Please try again.');
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeSpinner.style.display = 'none';
+        analyzeBtnText.textContent = '🔍 Analyze Media';
+      }
+    });
+
+    // Step 2: Download
+    document.getElementById('downloadForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const url = document.getElementById('mediaUrl').value.trim();
+      const mediaType = document.getElementById('mediaType').value;
+      const quality = document.getElementById('quality').value;
+
+      // Show loading state
+      const downloadBtn = document.getElementById('downloadBtn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btnText');
+
+      downloadBtn.disabled = true;
+      spinner.style.display = 'inline-block';
+      btnText.textContent = 'Downloading...';
+
+      hideError();
+      hideResult();
+
+      try {
+        const response = await fetch('/download', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: url,
+            type: mediaType,
+            quality: quality
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showResult(data.filename, data.download_url);
+        } else {
+          showError(data.error || 'Download failed. Please try again.');
+        }
+      } catch (error) {
+        showError('Network error. Please check your connection and try again.');
+      } finally {
+        // Reset button state
+        downloadBtn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.textContent = '⚡ Download Now';
+      }
+    });
+
+    // Back button
+    document.getElementById('backBtn').addEventListener('click', function() {
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('mediaUrl').value = '';
+      hideError();
+      hideResult();
+    });
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
     }
-    function location.reload() {
-      inputBox.value = "";
-      outputBox.value = "";
+
+    function hideError() {
+      document.getElementById('errorMessage').style.display = 'none';
     }
+
+    function showResult(filename, downloadUrl) {
+      const resultSection = document.getElementById('resultSection');
+      const resultText = document.getElementById('resultText');
+      const downloadLink = document.getElementById('downloadLink');
+
+      resultText.textContent = `File: ${filename}`;
+      downloadLink.href = downloadUrl;
+      downloadLink.download = filename;
+      resultSection.style.display = 'block';
+    }
+
+    function hideResult() {
+      document.getElementById('resultSection').style.display = 'none';
+    }
+
+    // Auto-detect media type and analyze URL
+    let analysisTimeout;
+    document.getElementById('mediaUrl').addEventListener('input', function (e) {
+      const url = e.target.value.trim();
+      const mediaType = document.getElementById('mediaType');
+
+      // Clear previous timeout
+      if (analysisTimeout) {
+        clearTimeout(analysisTimeout);
+      }
+
+      if (url.length > 10 && (url.includes('youtu') || url.includes('tiktok') || url.includes('instagram') || url.includes('twitter') || url.includes('facebook'))) {
+        // Auto-detect media type
+        if (url.includes('soundcloud') || url.includes('spotify')) {
+          mediaType.value = 'audio';
+        } else if (url.includes('instagram') && url.includes('/p/')) {
+          mediaType.value = 'best';
+        }
+
+        // Auto-analyze after 1 second of no typing
+        analysisTimeout = setTimeout(() => {
+          document.getElementById('analyzeBtn').click();
+        }, 1000);
+      }
+    });
   </script>
 </body>
+
 </html>
