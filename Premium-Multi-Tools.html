@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quicklify ⚡ Toolbox — OCR • Image→Link • Encrypt</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  <style>
+    :root{
+      --bg0:#0b0d13; --bg1:#0f1324; --card:rgba(255,255,255,.06);
+      --glass:rgba(255,255,255,.08); --line:rgba(255,255,255,.16);
+      --txt:#e8ecff; --muted:#a8b0d9;
+      --a:#00fff7; --b:#7a5cff; --c:#00d37f; --d:#ff4d7e; --y:#ffd400;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:Poppins,system-ui,Segoe UI,Roboto,Arial; color:var(--txt);
+      background:
+        radial-gradient(1200px 600px at -10% -20%, #12245a 0%, transparent 60%),
+        radial-gradient(900px 800px at 120% 10%, #331144 0%, transparent 55%),
+        linear-gradient(160deg, var(--bg0), var(--bg1));
+    }
+    a{color:var(--a); text-decoration:none}/* Top Nav */
+.nav{position:sticky; top:0; z-index:20; display:flex; gap:18px; align-items:center; justify-content:space-between; padding:14px 18px; background:linear-gradient(0deg, rgba(0,0,0,.0), rgba(0,0,0,.4)); backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid var(--line)}
+.brand{display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.4px}
+.brand .logo{width:34px; height:34px; border-radius:10px; background:conic-gradient(from 0deg, var(--a), var(--b), var(--c), var(--d), var(--a)); box-shadow:0 0 22px rgba(0,255,255,.35)}
+.nav .tabs{display:flex; gap:8px; flex-wrap:wrap}
+.tab-btn{border:1px solid var(--line); background:var(--glass); color:var(--txt); padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer; transition:transform .18s ease, box-shadow .25s ease}
+.tab-btn[aria-selected="true"]{outline:2px solid var(--a); box-shadow:0 0 18px rgba(0,255,255,.25)}
+.tab-btn:hover{transform:translateY(-2px)}
+
+.hero{padding:28px 18px 6px; max-width:1100px; margin:0 auto}
+.hero h1{margin:0 0 8px; font-size:clamp(26px,5vw,44px); background:linear-gradient(90deg,var(--a),var(--b),var(--c)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 0 24px rgba(0,255,255,.2)}
+.hero p{margin:0; color:var(--muted)}
+
+.wrap{max-width:1100px; margin:18px auto 40px; padding:0 18px}
+.grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:18px}
+@media (max-width:1000px){ .grid{grid-template-columns:1fr;}}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:0 10px 40px rgba(0,0,0,.45)}
+.card h2{margin:4px 0 12px; font-size:clamp(18px,3.5vw,26px)}
+.card h3{margin:14px 0 10px; font-size:18px}
+.muted{color:var(--muted)}
+
+.row{display:flex; gap:10px; flex-wrap:wrap}
+.input, select, textarea{width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.06); color:var(--txt)}
+textarea{min-height:180px}
+.btn{padding:12px 16px; border-radius:14px; border:1px solid var(--line); font-weight:800; letter-spacing:.3px; cursor:pointer; background:linear-gradient(90deg,var(--a),var(--b),var(--c)); color:#0b0d13; box-shadow:0 0 18px rgba(0,255,255,.28); transition:transform .18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent; color:var(--txt)}
+
+.panel{display:none}
+.panel.active{display:block}
+
+/* --- OCR preview / status --- */
+.progress{height:10px; background:rgba(255,255,255,.1); border-radius:10px; overflow:hidden}
+.progress div{height:100%; width:0%; background:linear-gradient(90deg,var(--a),var(--b)); transition:width .25s ease}
+
+/* --- Upload (image→link) --- */
+.drop{border:2px dashed var(--line); border-radius:16px; padding:24px; text-align:center; color:var(--muted)}
+.drop.drag{border-color:var(--a); color:var(--a)}
+
+/* --- Encrypt card preview --- */
+.file-pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(255,255,255,.08); border:1px solid var(--line); border-radius:999px}
+
+footer{max-width:1100px; margin:30px auto 46px; padding:0 18px; color:var(--muted)}
+
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand"><div class="logo"></div> <span>Quicklify ⚡ Toolbox</span></div>
+    <div class="tabs" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" data-target="#ocr">Image → Text (OCR)</button>
+      <button class="tab-btn" role="tab" data-target="#imglink">Image → Link</button>
+      <button class="tab-btn" role="tab" data-target="#crypto">Encrypt ↔ Decrypt</button>
+    </div>
+  </nav>  <section class="hero">
+    <h1>Build • Share • Secure — in one beautiful toolbox</h1>
+    <p>Extreme design. Smooth animations. Practical tools for creators and tinkerers. All client‑side where possible.</p>
+  </section>  <main class="wrap">
+    <!-- PANELS GRID -->
+    <div class="grid">
+      <!-- LEFT: TOOL PANEL -->
+      <section id="ocr" class="card panel active" aria-labelledby="tab-ocr">
+        <h2>📷 Image → Text (OCR)</h2>
+        <p class="muted">Extract text from screenshots, documents, receipts. Runs in your browser with Tesseract.js.</p>
+        <div class="row">
+          <input class="input" type="file" id="ocrFile" accept="image/*" />
+          <select id="ocrLang" class="input" title="Language">
+            <option value="eng" selected>English (eng)</option>
+            <option value="hin">Hindi (hin)</option>
+            <option value="tam">Tamil (tam)</option>
+            <option value="ben">Bengali (ben)</option>
+          </select>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnOcr">Start OCR</button>
+          <button class="btn ghost" id="btnCopyText">Copy</button>
+          <button class="btn ghost" id="btnSaveText">Download .txt</button>
+        </div>
+        <div class="progress" style="margin:12px 0 8px"><div id="ocrBar"></div></div>
+        <textarea id="ocrOut" placeholder="Extracted text appears here…"></textarea>
+      </section><aside class="card">
+    <h3>How it works</h3>
+    <p class="muted">OCR uses pattern recognition to guess characters from pixels. Clear images with high contrast work best. For multilingual images, try switching the language.</p>
+    <h3>Pro Tips</h3>
+    <ul class="muted">
+      <li>Crop away extra UI / borders before OCR.</li>
+      <li>Prefer PNG / high‑resolution images.</li>
+      <li>For Hindi or mixed scripts, select the right language.</li>
+    </ul>
+  </aside>
+</div>
+
+<!-- Panel 2: Image to Link -->
+<div class="grid panel" id="imglink">
+  <section class="card">
+    <h2>🖼️ Image → Shareable Link</h2>
+    <p class="muted">Upload an image and get a permanent link hosted on your server.</p>
+    <div id="drop" class="drop">Drag & drop image here or click to select<input id="uploader" type="file" accept="image/*" style="display:none"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="btnUpload">Upload</button>
+      <button class="btn ghost" id="btnCopyLink">Copy Link</button>
+    </div>
+    <p id="linkOut" class="muted" style="word-break:break-all; margin-top:8px"></p>
+  </section>
+  <aside class="card">
+    <h3>Setup (server)</h3>
+    <ol class="muted">
+      <li>Create an <b>uploads/</b> folder with write permission.</li>
+      <li>Place <b>upload.php</b> on your site root.</li>
+      <li>Update the <b>BASE_URL</b> inside the script if needed.</li>
+    </ol>
+    <h3>Safety</h3>
+    <p class="muted">Files are stored on your hosting. Add size/type checks on PHP to prevent abuse.</p>
+  </aside>
+</div>
+
+<!-- Panel 3: Encrypt / Decrypt -->
+<div class="grid panel" id="crypto">
+  <section class="card">
+    <h2>🔒 Image Encryption & Decryption (AES‑GCM)</h2>
+    <p class="muted">Strong client‑side crypto using Web Crypto API. Your password never leaves the browser.</p>
+    <div class="row">
+      <input class="input" type="file" id="cryptFile" accept="image/*,.qenc" />
+      <input class="input" type="password" id="cryptPass" placeholder="Password (min 8 chars)" />
+    </div>
+    <div class="row">
+      <button class="btn" id="btnEncrypt">Encrypt → .qenc</button>
+      <button class="btn ghost" id="btnDecrypt">Decrypt → image</button>
+    </div>
+    <p id="cryptStatus" class="muted"></p>
+    <div id="fileInfo" class="file-pill" style="display:none"></div>
+  </section>
+  <aside class="card">
+    <h3>Format</h3>
+    <p class="muted">We save: <code>magic:QLFY1 | salt(16) | iv(12) | ciphertext</code>. AES‑GCM 256‑bit, PBKDF2‑SHA256 (100k rounds).</p>
+    <h3>Remember</h3>
+    <ul class="muted">
+      <li><b>Lose the password = lose the image.</b></li>
+      <li>Use unique passwords for different files.</li>
+    </ul>
+  </aside>
+</div>
+
+  </main>  <footer>
+    <p>⚡ Quicklify by QuickScript — Extreme design • Smooth UX • Privacy‑first tools. Need custom tools? DM on Telegram.</p>
+  </footer><script>
+  // ----- Tabs -----
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.setAttribute('aria-selected','false'));
+      btn.setAttribute('aria-selected','true');
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      const t = document.querySelector(btn.dataset.target);
+      if(t){ t.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+    })
+  })
+
+  // ====== 1) OCR ======
+  const ocrFile = document.getElementById('ocrFile');
+  const ocrLang = document.getElementById('ocrLang');
+  const ocrBar  = document.getElementById('ocrBar');
+  const ocrOut  = document.getElementById('ocrOut');
+
+  document.getElementById('btnOcr').addEventListener('click', async ()=>{
+    if(!ocrFile.files[0]) return alert('Choose an image first');
+    ocrBar.style.width = '0%';
+    ocrOut.value='';
+    const worker = await Tesseract.createWorker();
+    await worker.loadLanguage(ocrLang.value);
+    await worker.initialize(ocrLang.value);
+    const { data } = await worker.recognize(ocrFile.files[0], { logger:m=>{ if(m.progress) ocrBar.style.width = (m.progress*100).toFixed(0)+'%'; } });
+    ocrOut.value = data.text.trim();
+    await worker.terminate();
+  });
+  document.getElementById('btnCopyText').addEventListener('click',()=>{
+    navigator.clipboard.writeText(ocrOut.value || '').then(()=>alert('Copied!'))
+  })
+  document.getElementById('btnSaveText').addEventListener('click',()=>{
+    const blob = new Blob([ocrOut.value||''], {type:'text/plain'});
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ocr.txt'; a.click();
+  })
+
+  // ====== 2) Image → Link (frontend) ======
+  const drop = document.getElementById('drop');
+  const uploader = document.getElementById('uploader');
+  const btnUpload = document.getElementById('btnUpload');
+  const linkOut = document.getElementById('linkOut');
+  const btnCopyLink = document.getElementById('btnCopyLink');
+
+  drop.addEventListener('click',()=>uploader.click());
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.add('drag')}));
+  ;['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.remove('drag')}));
+  drop.addEventListener('drop', e=>{ uploader.files = e.dataTransfer.files; drop.textContent = uploader.files[0]?.name || 'File added'; });
+  uploader.addEventListener('change', ()=>{ drop.textContent = uploader.files[0]?.name || 'Drag & drop image here or click to select'; });
+
+  btnUpload.addEventListener('click', async ()=>{
+    if(!uploader.files[0]) return alert('Select an image');
+    const fd = new FormData(); fd.append('image', uploader.files[0]);
+    try{
+      const res = await fetch('upload.php', { method:'POST', body:fd });
+      const html = await res.text();
+      linkOut.innerHTML = html; // backend returns link HTML
+    }catch(err){ linkOut.textContent = 'Upload failed: '+err; }
+  });
+  btnCopyLink.addEventListener('click',()=>{
+    const url = (linkOut.textContent||'').match(/https?:[^\s]+/);
+    if(url){ navigator.clipboard.writeText(url[0]); alert('Link copied!'); }
+  })
+
+  // ====== 3) Encrypt / Decrypt (AES‑GCM) ======
+  const cryptFile = document.getElementById('cryptFile');
+  const cryptPass = document.getElementById('cryptPass');
+  const cryptStatus = document.getElementById('cryptStatus');
+  const fileInfo = document.getElementById('fileInfo');
+
+  function showFileInfo(f){ if(!f){fileInfo.style.display='none';return;} fileInfo.style.display='inline-flex'; fileInfo.textContent = `${f.name} • ${(f.size/1024).toFixed(1)} KB`; }
+  cryptFile.addEventListener('change',()=>showFileInfo(cryptFile.files[0]));
+
+  async function deriveKey(password, salt){
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), {name:'PBKDF2'}, false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      {name:'PBKDF2', salt, iterations:100000, hash:'SHA-256'},
+      keyMaterial,
+      {name:'AES-GCM', length:256},
+      false,
+      ['encrypt','decrypt']
+    );
+  }
+
+  function concatBuffers(arr){
+    let len = 0; arr.forEach(b=>len+=b.byteLength); const out = new Uint8Array(len);
+    let off=0; arr.forEach(b=>{ out.set(new Uint8Array(b), off); off+=b.byteLength; });
+    return out.buffer;
+  }
+
+  document.getElementById('btnEncrypt').addEventListener('click', async ()=>{
+    const f = cryptFile.files[0]; const pw = cryptPass.value;
+    if(!f || !pw) return alert('Select an image and enter password');
+    cryptStatus.textContent = 'Encrypting…';
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(pw, salt);
+    const data = await f.arrayBuffer();
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, data);
+    const magic = new TextEncoder().encode('QLFY1');
+    const blob = new Blob([concatBuffers([magic.buffer, salt.buffer, iv.buffer, ct])], {type:'application/octet-stream'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (f.name.replace(/\.[^.]+$/, ''))+'.qenc'; a.click();
+    cryptStatus.textContent = '✅ Encrypted (.qenc saved)';
+  });
+
+  document.getElementById('btnDecrypt').addEventListener('click', async ()=>{
+    const f = cryptFile.files[0]; const pw = cryptPass.value;
+    if(!f || !pw) return alert('Select a .qenc file and enter password');
+    cryptStatus.textContent = 'Decrypting…';
+    const buf = await f.arrayBuffer(); const u = new Uint8Array(buf);
+    const magic = new TextDecoder().decode(u.slice(0,5)); if(magic!=='QLFY1'){ alert('Invalid file'); return; }
+    const salt = u.slice(5,21); const iv = u.slice(21,33); const ct = u.slice(33).buffer;
+    try{
+      const key = await deriveKey(pw, salt);
+      const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, ct);
+      const blob = new Blob([pt], {type:'image/*'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'decrypted-image'; a.click();
+      cryptStatus.textContent = '✅ Decrypted (download started)';
+    }catch(e){ cryptStatus.textContent = '❌ Wrong password or corrupted file'; }
+  });
+</script></body>
+</html>
